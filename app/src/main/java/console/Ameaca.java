@@ -7,8 +7,11 @@ package console;
 import java.sql.Connection;
 import java.util.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -40,6 +43,34 @@ public class Ameaca {
         statement.setString(9, consequencia);        
         int execute = statement.executeUpdate();
         return execute;
+    }
+     
+    public List<Ameaca> getAmeacas() throws SQLException{
+        Connection con = new ConexaoSqlBasica().getConexao(); 
+        List<Ameaca>ameacas = new ArrayList<Ameaca>();
+        Statement statement = con.createStatement();
+        statement.setQueryTimeout(30);
+        ResultSet rs = statement.executeQuery("SELECT * FROM ameacas");
+        while(rs.next()){
+            Ameaca ameaca = new Ameaca();
+            ameaca.setCve(rs.getString("cve"));
+            ameaca.setProduto(rs.getString("produto"));
+            ameacas.add(ameaca);
+        }
+        return ameacas;
+    }
+    
+    public Ameaca getAmeaca() throws SQLException{
+        Connection con = new ConexaoSqlBasica().getConexao(); 
+        Statement statement = con.createStatement();
+        statement.setQueryTimeout(30);
+        ResultSet rs = statement.executeQuery("SELECT * FROM ameacas WHERE id =" + this.id);
+        rs.next();
+            Ameaca ameaca = new Ameaca();
+            ameaca.setCve(rs.getString("cve"));
+            ameaca.setProduto(rs.getString("produto"));        
+    
+        return ameaca;
     }
      
     public int getId() {
